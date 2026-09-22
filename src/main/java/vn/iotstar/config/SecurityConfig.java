@@ -42,17 +42,20 @@ public class SecurityConfig {
         http
             .authenticationProvider(authenticationProvider())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/register", "/verify-otp", "/forgot-password",
-                        "/reset-password", "/register/resend-otp", "/css/**",
-                        "/images/**", "/error").permitAll()
-                .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
-                .requestMatchers("/dashboard").authenticated()
+                .requestMatchers(
+                    "/login",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/uploads/**"
+                ).permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .usernameParameter("email")
+                .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true)
                 .failureUrl("/login?error=true")
@@ -64,8 +67,7 @@ public class SecurityConfig {
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()
-            )
-            .exceptionHandling(ex -> ex.accessDeniedPage("/access-denied"));
+            );
 
         return http.build();
     }

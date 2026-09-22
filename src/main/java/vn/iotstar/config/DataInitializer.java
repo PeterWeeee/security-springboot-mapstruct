@@ -1,6 +1,5 @@
 package vn.iotstar.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,38 +13,50 @@ import vn.iotstar.repository.UserRepository;
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initData(RoleRepository roleRepository,
-                              UserRepository userRepository,
-                              PasswordEncoder encoder,
-                              @Value("${ADMIN_EMAIL:admin@hcmute.edu.vn}") String adminEmail,
-                              @Value("${ADMIN_PASSWORD:123456}") String adminPassword) {
+    CommandLineRunner init(
+            RoleRepository roleRepository,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         return args -> {
-            Role userRole = roleRepository.findByNameIgnoreCase("ROLE_USER")
-                    .orElseGet(() -> roleRepository.save(new Role("ROLE_USER")));
+            Role userRole = roleRepository.findByName("ROLE_USER")
+                    .orElseGet(() -> roleRepository.save(
+                            Role.builder()
+                                    .name("ROLE_USER")
+                                    .build()
+                    ));
 
-            Role adminRole = roleRepository.findByNameIgnoreCase("ROLE_ADMIN")
-                    .orElseGet(() -> roleRepository.save(new Role("ROLE_ADMIN")));
+            Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                    .orElseGet(() -> roleRepository.save(
+                            Role.builder()
+                                    .name("ROLE_ADMIN")
+                                    .build()
+                    ));
 
-            if (!userRepository.existsByEmailIgnoreCase(adminEmail)) {
-                User admin = User.builder()
-                        .email(adminEmail.toLowerCase())
-                        .fullName("System Administrator")
-                        .password(encoder.encode(adminPassword))
-                        .role(adminRole)
-                        .enabled(true)
-                        .build();
-                userRepository.save(admin);
-            }
-
-            if (!userRepository.existsByEmailIgnoreCase("user@gmail.com")) {
+            if (userRepository.findByUsername("user01").isEmpty()) {
                 User user = User.builder()
-                        .email("user@gmail.com")
-                        .fullName("Nguyễn Văn User")
-                        .password(encoder.encode("123456"))
+                        .username("user01")
+                        .email("user01@gmail.com")
+                        .password(passwordEncoder.encode("123456"))
+                        .fullName("Nguyễn Hữu Trung")
+                        .images("/images/user.png")
                         .role(userRole)
                         .enabled(true)
                         .build();
                 userRepository.save(user);
+            }
+
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                User admin = User.builder()
+                        .username("admin")
+                        .email("admin@hcmute.edu.vn")
+                        .password(passwordEncoder.encode("123456"))
+                        .fullName("System Administrator")
+                        .images("/images/avatar-default.png")
+                        .role(adminRole)
+                        .enabled(true)
+                        .build();
+                userRepository.save(admin);
             }
         };
     }
