@@ -54,8 +54,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
         // 2. Fallback luu tru cuc bo an toan
         try {
-            String uploadDir = "uploads/products";
-            Path uploadPath = Paths.get(uploadDir);
+            Path uploadPath = Paths.get("uploads/products").toAbsolutePath().normalize();
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
@@ -63,7 +62,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             String originalName = file.getOriginalFilename() != null ? file.getOriginalFilename() : "image.png";
             String filename = UUID.randomUUID() + "_" + originalName.replaceAll("\\s+", "_");
             Path targetFile = uploadPath.resolve(filename);
-            file.transferTo(targetFile.toFile());
+            Files.copy(file.getInputStream(), targetFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
             String localUrl = "/uploads/products/" + filename;
             return new CloudinaryUploadResult(localUrl, "local_" + filename);
@@ -78,9 +77,11 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
         if (publicId.startsWith("local_")) {
             String filename = publicId.substring(6);
-            File file = new File("uploads/products/" + filename);
-            if (file.exists()) {
-                file.delete();
+            try {
+                Path uploadPath = Paths.get("uploads/products").toAbsolutePath().normalize();
+                Path targetFile = uploadPath.resolve(filename);
+                Files.deleteIfExists(targetFile);
+            } catch (Exception ignored) {
             }
             return;
         }

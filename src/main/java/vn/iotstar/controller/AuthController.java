@@ -116,7 +116,7 @@ public class AuthController {
                         BindingResult result,
                         @RequestParam String otp,
                         RedirectAttributes redirect) {
-        if (!dto.getPassword().equals(dto.getConfirmPassword())) {
+        if (dto.getPassword() != null && !dto.getPassword().equals(dto.getConfirmPassword())) {
             result.reject("password.error", "Mật khẩu xác nhận không đúng.");
         }
         if (result.hasErrors()) {

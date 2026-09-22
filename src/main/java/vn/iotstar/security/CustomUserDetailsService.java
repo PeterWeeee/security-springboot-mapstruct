@@ -17,17 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = userRepository.findByUsernameOrEmailWithRole(login)
-                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy username/email: " + login));
-
-        return new CustomUserDetails(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                user.getFullName(),
-                user.getImages(),
-                user.getRole() != null ? user.getRole().getName() : "ROLE_USER",
-                user.isEnabled()
-        );
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản với username/email: " + login));
+        return new CustomUserDetails(user);
     }
 }
