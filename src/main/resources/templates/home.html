@@ -1,19 +1,29 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="~{layouts/layout :: head('Trang chủ')}"></head>
+<html lang="vi"
+ xmlns:th="http://www.thymeleaf.org"
+ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+ layout:decorate="~{layouts/layout}">
+<head>
+ <title>Trang chủ</title>
+</head>
 <body>
-<header th:replace="~{fragments/header :: header}"></header>
-<main class="container">
-    <h1>Home</h1>
-    <div class="panel" sec:authorize="isAuthenticated()">
-        <p>Xin chào, <strong sec:authentication="name">User</strong>!</p>
-        <p>Họ và tên: <strong th:text="${#authentication.principal.fullName}">Full Name</strong></p>
-        <p>Vai trò (Role): <strong th:text="${#authentication.principal.roleName}">ROLE</strong></p>
-    </div>
-    <div class="panel" sec:authorize="!isAuthenticated()">
-        <p>Bạn chưa đăng nhập. Vui lòng <a th:href="@{/login}">Đăng nhập</a> để truy cập hệ thống.</p>
-    </div>
+<main layout:fragment="content">
+ <div class="panel">
+     <h1>Trang chủ UTEShop</h1>
+     <p>
+         Xin chào
+         <strong th:text="${#authentication.principal.fullName}">User</strong>
+     </p>
+     <p>
+         Đang đăng nhập với tài khoản:
+         <strong th:text="${#authentication.principal.username}">username</strong>
+         (<span th:text="${#authentication.principal.email}">email</span>)
+     </p>
+     <p>
+         Quyền hạn:
+         <span class="badge" th:text="${#authentication.principal.role}">ROLE</span>
+     </p>
+ </div>
 </main>
 </body>
 </html>
