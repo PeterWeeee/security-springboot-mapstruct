@@ -1,43 +1,39 @@
-# Spring Boot Security 7 with MapStruct and Thymeleaf
+# Spring Boot 4 + Spring Security 7: Vi du 2 - Custom Login
 
-Project huong dan chuc nang Login bang Spring Security 7 tren nen tang Spring Boot 4, su dung MapStruct de chuyen doi DTO - Entity, Thymeleaf lam template engine (layout khong dung Thymeleaf Layout Dialect), ket noi co so du lieu SQL Server.
+Nhanh nay (example-2-custom-login) thuc hien Vi du 2 theo tai lieu:
+- Chuc nang Custom Login: Cho phep dang nhap bang Username hoac Email deu duoc.
+- Hien thi thong tin nguoi dung tren header.html: Avatar (images), Ho va ten (fullName), Username, Email, Role va nut Dang xuat.
+- Su dung Thymeleaf Layout Dialect (layout:decorate="~{layouts/layout}").
+- Su dung MapStruct 1.6.3 de anh xa Entity sang DTO.
+- Ket noi co so du lieu SQL Server: database webst_security_v2.
 
-## Yeu cau he thong
-- Java 17 hoac Java 21/26
-- Maven 3.9+
-- Microsoft SQL Server
-
-## Cau hinh co so du lieu
-- Database name: webst_security
-- User: sa
-- Password: sa-password (mac dinh trong tai lieu: 123456)
-- Script tao database nam trong thu muc: `database/create_db.sql`
-
-## Cac cong nghe su dung
+## Thong so he thong
 - Spring Boot 4.1.1
 - Spring Security 7.1.x
-- Spring Data JPA / Hibernate
-- MapStruct 1.6.3
-- Lombok
-- Thymeleaf + Thymeleaf Extras Spring Security
-- SQL Server JDBC Driver
+- Database: webst_security_v2 tren SQL Server localhost:1433 (user: sa, pass: 123456)
+- Port chay ung dung: 8081
 
-## Tai khoan mac dinh
-Ung dung tu dong tao du lieu mau khi khoi dong (DataInitializer):
-- Admin:
-  - Email: admin@hcmute.edu.vn
-  - Password: `123456`
-  - Quyen: ROLE_ADMIN
-- User:
-  - Email: user@gmail.com
-  - Password: `123456`
-  - Quyen: ROLE_USER
+## Tai khoan mau thu nghiem
+He thong tu dong khoi tao tai khoan khi ung dung khoi dong (DataInitializer):
+1. User:
+   - Username: user01
+   - Email: user01@gmail.com
+   - Password: `123456`
+   - Ho va ten: Nguyen Huu Trung
+   - Avatar: /images/user.png
+   - Role: ROLE_USER
+2. Admin:
+   - Username: admin
+   - Email: admin@hcmute.edu.vn
+   - Password: `123456`
+   - Ho va ten: System Administrator
+   - Avatar: /images/avatar-default.png
+   - Role: ROLE_ADMIN
 
-## Huong dan chay ung dung
-1. Mo file `database/create_db.sql` va thuc thi tren SQL Server de tao database `webst_security`.
-2. Cau hinh thong so ket noi trong file `application.properties` hoac `.env`.
-3. Chay lenh:
+## Huong dan chay
+1. Thuc thi file `database/create_db_v2.sql` tren SQL Server (hoac de Hibernate ddl-auto tu dong tao).
+2. Chay lenh:
    ```bash
    ./mvnw spring-boot:run
    ```
-4. Truy cap ung dung tai: `http://localhost:8088/login`
+3. Truy cap ung dung tai: `http://localhost:8081/login`
