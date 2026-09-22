@@ -44,8 +44,16 @@ He thong tu dong khoi tao tai khoan khi ung dung khoi dong (DataInitializer):
    - Role: ROLE_USER
 
 ## Huong dan chay
-1. Thuc thi file `database/create_db_v3.sql` tren SQL Server.
-2. Cau hinh thong tin trong file `.env`.
+1. Thuc thi file `database/create_db_v3.sql` tren SQL Server (localhost:1433, sa / 123456).
+2. Cau hinh moi truong (Tuy chon):
+   - Mac dinh, ung dung da cau hinh san ket noi CSDL `webst_security_v3` tren port 8082.
+   - Neu muon ung dung gui email OTP that qua Gmail cua ban:
+     Copy file `.env.example` thanh file `.env`, sau do dien thong tin email va Mat khau ung dung (App Password) cua ban:
+     ```properties
+     MAIL_USERNAME=email_cua_ban@gmail.com
+     MAIL_PASSWORD=mat_khau_ung_dung_16_ky_tu
+     ```
+   - Neu khong cau hinh email: Ung dung van hoat dong hoan toan binh thuong! Khi thu nghiem chuc nang Dang ky hoac Quen mat khau, ma OTP duoc tu dong in truc tiep ra man hinh Console/Terminal (`>>> [OTP SYSTEM] MA OTP CUA BAN LA: xxxxxx`), nguoi kiem thu chi can copy ma do vao form ma khong bi chan hay loi.
 3. Chay lenh:
    ```bash
    ./mvnw spring-boot:run
