@@ -12,13 +12,14 @@ public class CloudinaryConfig {
 
     @Bean
     Cloudinary cloudinary(
-            @Value("${cloudinary.cloud-name:dfdfdf}") String cloudName,
-            @Value("${cloudinary.api-key:576632571682623}") String apiKey,
-            @Value("${cloudinary.api-secret:ikPEbngxnKwAw-XkvR1WVEaQZcI}") String apiSecret) {
+            @Value("${cloudinary.cloud-name:}") String cloudName,
+            @Value("${cloudinary.api-key:}") String apiKey,
+            @Value("${cloudinary.api-secret:}") String apiSecret) {
         return new Cloudinary(Map.of(
-                "cloud_name", cloudName,
-                "api_key", apiKey,
-                "api_secret", apiSecret
+                "cloud_name", cloudName != null ? cloudName : "",
+                "api_key", apiKey != null ? apiKey : "",
+                "api_secret", apiSecret != null ? apiSecret : "",
+                "secure", true
         ));
     }
 }

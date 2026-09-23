@@ -37,19 +37,20 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         // 1. Thu upload len Cloudinary neu da co cau hinh that
         try {
             if (cloudinary.config.cloudName != null
+                    && !cloudinary.config.cloudName.isBlank()
                     && !cloudinary.config.cloudName.equals("dfdfdf")
                     && !cloudinary.config.cloudName.equals("your_cloud_name")) {
                 Map<?, ?> result = cloudinary.uploader().upload(
                         file.getBytes(),
                         Map.of("folder", "shop/products")
                 );
-                return new CloudinaryUploadResult(
-                        String.valueOf(result.get("secure_url")),
-                        String.valueOf(result.get("public_id"))
-                );
+                String secureUrl = String.valueOf(result.get("secure_url"));
+                String publicId = String.valueOf(result.get("public_id"));
+                log.info("Cloudinary upload thanh cong! URL: {}, Public ID: {}", secureUrl, publicId);
+                return new CloudinaryUploadResult(secureUrl, publicId);
             }
         } catch (Exception e) {
-            log.warn("Cloudinary upload khong thanh cong: {}. Chuyen sang fallback luu anh local.", e.getMessage());
+            log.warn("Cloudinary upload khong thanh cong: {}. Chuyen sang fallback luu anh local.", e.getMessage(), e);
         }
 
         // 2. Fallback luu tru cuc bo an toan
@@ -87,7 +88,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         }
 
         try {
-            cloudinary.uploader().destroy(publicId, Map.of("resource_type", "image"));
+            log.info("Yeu cau xoa anh tren Cloudinary voi publicId: {}", publicId);
+            Map<?, ?> res = cloudinary.uploader().destroy(publicId, Map.of("resource_type", "image"));
+            log.info("Ket qua xoa Cloudinary: {}", res);
         } catch (Exception e) {
             log.warn("Xoa anh Cloudinary that bai: {}", e.getMessage());
         }
